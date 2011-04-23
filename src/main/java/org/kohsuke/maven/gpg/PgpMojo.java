@@ -23,6 +23,7 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.MavenProjectHelper;
+import org.bouncycastle.openpgp.PGPException;
 import org.bouncycastle.openpgp.PGPSecretKey;
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
@@ -30,14 +31,14 @@ import org.codehaus.plexus.util.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.List;
 
 /**
- * Goal which touches a timestamp file.
+ * Signs the artifacts.
  *
- * @goal touch
- * 
- * @phase process-sources
+ * @goal sign
+ * @phase verify
  */
 public class PgpMojo extends AbstractMojo
 {
@@ -86,15 +87,20 @@ public class PgpMojo extends AbstractMojo
      */
     public PlexusContainer container;
 
+    /**
+     *
+     * @parameter default-value="${project.build.directory}"
+     */
+    private File outputDirectory;
+
+
     public void execute() throws MojoExecutionException {
         if (skip)   return;
 
-
-        PGPSecretKey _secretKey = loadSecretKey();
-//        String _passphrase = passphrase.load();
+        Signer signer = new Signer(loadSecretKey(),loadPassPhrase().toCharArray());
 
         if ( !"pom".equals( project.getPackaging() ) )
-            sign(project.getArtifact());
+            sign(signer,project.getArtifact());
 
         {// sign POM
             File pomToSign = new File( project.getBuild().getDirectory(), project.getBuild().getFinalName() + ".pom" );
@@ -108,15 +114,15 @@ public class PgpMojo extends AbstractMojo
             getLog().debug( "Generating signature for " + pomToSign );
 
             // fake just enough Artifact for the sign method
-            DefaultArtifact a = new DefaultArtifact(null, null, null, null, null, null,
+            DefaultArtifact a = new DefaultArtifact(project.getGroupId(), project.getArtifactId(), null, null, null, null,
                     new DefaultArtifactHandler("pom"));
             a.setFile(pomToSign);
 
-            sign(a);
+            sign(signer,a);
         }
 
         for (Artifact a : (List<Artifact>)project.getAttachedArtifacts())
-            sign(a);
+            sign(signer,a);
     }
 
     /**
@@ -134,7 +140,7 @@ public class PgpMojo extends AbstractMojo
 
         String scheme = secretkey.substring(0, head);
         try {
-            KeyFileLoader kfl = (KeyFileLoader)container.lookup(KeyFileLoader.class.getName(), scheme);
+            KeyFileLoader kfl = (KeyFileLoader)container.lookup(SecretKeyLoader.class.getName(), scheme);
             return  kfl.load(this, secretkey.substring(head+1));
         } catch (ComponentLookupException e) {
             throw new MojoExecutionException("Invalid secret key scheme '"+scheme+"'. If this is your custom scheme, perhaps you forgot to specify it in <dependency> to this plugin?",e);
@@ -170,9 +176,24 @@ public class PgpMojo extends AbstractMojo
     /**
      * Sign and attach the signaature to the build.
      */
-    private void sign(Artifact a) {
-        File signature = null;
+    protected void sign(Signer signer, Artifact a) throws MojoExecutionException {
+        String name = a.getGroupId() + "-" + a.getArtifactId();
+        if (a.getClassifier()!=null)
+            name += '-'+a.getClassifier();
+        name += '.'+a.getArtifactHandler().getExtension();
+        name += ".asc";
 
+        File signature = new File(outputDirectory,name);
+
+        try {
+            signer.sign(a.getFile(),signature);
+        } catch (PGPException e) {
+            throw new MojoExecutionException("Failed to sign "+a.getFile(),e);
+        } catch (IOException e) {
+            throw new MojoExecutionException("Failed to sign "+a.getFile(),e);
+        } catch (GeneralSecurityException e) {
+            throw new MojoExecutionException("Failed to sign "+a.getFile(),e);
+        }
 
         projectHelper.attachArtifact( project, a.getArtifactHandler().getExtension() + ".asc",
                                       a.getClassifier(), signature );
