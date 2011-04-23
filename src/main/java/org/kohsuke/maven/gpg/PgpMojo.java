@@ -29,7 +29,6 @@ import org.bouncycastle.openpgp.PGPSecretKey;
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
 import org.codehaus.plexus.util.FileUtils;
-import org.kohsuke.maven.gpg.loaders.KeyFileLoader;
 
 import java.io.File;
 import java.io.IOException;
@@ -103,7 +102,8 @@ public class PgpMojo extends AbstractMojo
         // capture the attached artifacts to sign before we start attaching our own stuff
         List<Artifact> attached = new ArrayList<Artifact>((List<Artifact>)project.getAttachedArtifacts());
 
-        Signer signer = new Signer(loadSecretKey(),loadPassPhrase().toCharArray());
+        PGPSecretKey secretKey = loadSecretKey();
+        Signer signer = new Signer(secretKey,loadPassPhrase(secretKey).toCharArray());
 
         if ( !"pom".equals( project.getPackaging() ) )
             sign(signer,project.getArtifact());
@@ -159,7 +159,7 @@ public class PgpMojo extends AbstractMojo
     /**
      * From {@link #passphrase}, load the passphrase.
      */
-    public String loadPassPhrase() throws MojoExecutionException {
+    public String loadPassPhrase(PGPSecretKey key) throws MojoExecutionException {
         if (passphrase==null)
             passphrase = System.getenv("PGP_PASSPHRASE");
         if (passphrase==null)
@@ -172,7 +172,7 @@ public class PgpMojo extends AbstractMojo
         String scheme = passphrase.substring(0, head);
         try {
             PassphraseLoader pfl = (PassphraseLoader)container.lookup(PassphraseLoader.class.getName(), scheme);
-            return  pfl.load(this, passphrase.substring(head+1));
+            return  pfl.load(this, key, passphrase.substring(head+1));
         } catch (ComponentLookupException e) {
             throw new MojoExecutionException("Invalid pass phrase scheme '"+scheme+"'. If this is your custom scheme, perhaps you forgot to specify it in <dependency> to this plugin?",e);
          } catch (IOException e) {

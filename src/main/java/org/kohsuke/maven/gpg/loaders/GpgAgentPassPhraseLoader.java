@@ -4,7 +4,9 @@ import com.sun.jna.Library;
 import com.sun.jna.Native;
 import com.sun.jna.Structure;
 import org.apache.maven.plugin.MojoExecutionException;
-import org.bouncycastle.util.encoders.Base64;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.openpgp.PGPException;
+import org.bouncycastle.openpgp.PGPSecretKey;
 import org.bouncycastle.util.encoders.Hex;
 import org.codehaus.plexus.component.annotations.Component;
 import org.kohsuke.maven.gpg.PassphraseLoader;
@@ -14,17 +16,12 @@ import java.io.BufferedReader;
 import java.io.FileDescriptor;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintStream;
-import java.io.RandomAccessFile;
-import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.net.Socket;
-import java.net.SocketAddress;
 import java.net.SocketException;
 import java.net.SocketImpl;
-import java.util.Arrays;
 
 /**
  * @author Kohsuke Kawaguchi
@@ -32,7 +29,7 @@ import java.util.Arrays;
 @Component(role=PassphraseLoader.class,hint="gpg-agent")
 public class GpgAgentPassPhraseLoader extends PassphraseLoader {
     @Override
-    public String load(PgpMojo mojo, String specifier) throws IOException, MojoExecutionException {
+    public String load(PgpMojo mojo, PGPSecretKey secretKey, String specifier) throws IOException, MojoExecutionException {
         String agentInfo = System.getenv("GPG_AGENT_INFO");
         if (agentInfo==null)
             throw new MojoExecutionException("GPG agent is not running. There's no GPG_AGENT_INFO environment variable");
@@ -41,7 +38,7 @@ public class GpgAgentPassPhraseLoader extends PassphraseLoader {
         if (tokens.length!=3 || !tokens[2].equals("1"))
             throw new MojoExecutionException("Invalid  GPG_AGENT_INFO: "+agentInfo);
 
-        return getPassphrase(tokens[0]);
+        return getPassphrase(tokens[0],secretKey);
     }
 
     /**
@@ -65,8 +62,7 @@ public class GpgAgentPassPhraseLoader extends PassphraseLoader {
             FileDescriptor fd = (FileDescriptor)c.newInstance(socket);
             c = Class.forName("java.net.PlainSocketImpl").getDeclaredConstructor(FileDescriptor.class);
             c.setAccessible(true);
-            UnixDomainSocket s = new UnixDomainSocket((SocketImpl) c.newInstance(fd));
-            return s;
+            return new UnixDomainSocket((SocketImpl) c.newInstance(fd));
         } catch (NoSuchMethodException e) {
             throw new Error(e);
         } catch (InstantiationException e) {
@@ -84,7 +80,7 @@ public class GpgAgentPassPhraseLoader extends PassphraseLoader {
         }
     }
 
-    public String getPassphrase(String socketFile) throws IOException, MojoExecutionException {
+    public String getPassphrase(String socketFile, PGPSecretKey secretKey) throws IOException, MojoExecutionException {
         Socket s = connect(socketFile);
         try {
             BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream()));
@@ -102,21 +98,35 @@ public class GpgAgentPassPhraseLoader extends PassphraseLoader {
                 expectOK(in);
             }
 
-//            try {
-//                String tty = libc.ctermid(null);
-//                if (tty!=null) {
-//                    s.getOutputStream().write(("OPTION ttyname=" + tty + "\n").getBytes());
-//                    expectOK(in);
-//                }
-//            } catch (Error e) {
-//                // if we fail to figure out TTY, move on
-//            }
+    //            try {
+    //                String tty = libc.ctermid(null);
+    //                if (tty!=null) {
+    //                    s.getOutputStream().write(("OPTION ttyname=" + tty + "\n").getBytes());
+    //                    expectOK(in);
+    //                }
+    //            } catch (Error e) {
+    //                // if we fail to figure out TTY, move on
+    //            }
 
-            s.getOutputStream().write(
-                    "GET_PASSPHRASE pgp-maven-plugin:passphrase + Passphrase Enter%20Passphrase%20To%20Sign%20Maven%20Artifact\n".getBytes()
-            );
-            s.getOutputStream().flush();
-            return new String(Hex.decode(expectOK(in).trim()));
+            String keyId = Long.toHexString(secretKey.getPublicKey().getKeyID()&0xFFFFFFFFL);
+
+            boolean first = true;
+            while (true) {
+                String errMsg = first?"+":"Passphrase+incorrect";
+                first = false;
+                s.getOutputStream().write(
+                    ("GET_PASSPHRASE pgp-maven-plugin:passphrase"+keyId+" "+ errMsg + " Passphrase Enter%20passphrase%20to%20unlock%20key+"+keyId+"+for+signing+maven+artifact\n").getBytes()
+                );
+
+                String phrase = new String(Hex.decode(expectOK(in).trim()));
+                try {
+                    secretKey.extractPrivateKey(phrase.toCharArray(),new BouncyCastleProvider());
+                    return phrase;
+                } catch (PGPException e) {
+                    // invalid pass phrase
+                    // continue
+                }
+            }
         } finally {
             s.close();
         }
@@ -159,8 +169,4 @@ public class GpgAgentPassPhraseLoader extends PassphraseLoader {
     private static final int PF_UNIX = 1;
     private static final int AF_UNIX = 1;
     private static final int SOCK_STREAM = 1;
-
-    public static void main(String[] args) throws Exception {
-        System.out.println(new GpgAgentPassPhraseLoader().getPassphrase("/tmp/gpg-B8NipE/S.gpg-agent"));
-    }
 }
