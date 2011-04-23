@@ -4,6 +4,7 @@ import org.bouncycastle.openpgp.PGPObjectFactory;
 import org.bouncycastle.openpgp.PGPSecretKey;
 import org.bouncycastle.openpgp.PGPSecretKeyRing;
 import org.bouncycastle.openpgp.PGPUtil;
+import org.codehaus.plexus.component.annotations.Component;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,10 +16,8 @@ import java.io.IOException;
  * a "-----BEGIN PGP PRIVATE KEY BLOCK-----" header.
  *
  * @author Kohsuke Kawaguchi
- * @plexus.component
- *      role="org.kohsuke.maven.gpg.SecretKeyLoader"
- *      role-hint="keyfile"
  */
+@Component(role=SecretKeyLoader.class,hint="keyfile")
 public class KeyFileLoader extends SecretKeyLoader {
     public PGPSecretKey load(PgpMojo mojo, String keyFile) throws IOException {
         FileInputStream in = new FileInputStream(new File(keyFile));
