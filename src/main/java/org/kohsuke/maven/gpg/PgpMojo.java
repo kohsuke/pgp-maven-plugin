@@ -19,6 +19,7 @@ package org.kohsuke.maven.gpg;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DefaultArtifact;
 import org.apache.maven.artifact.handler.DefaultArtifactHandler;
+import org.apache.maven.artifact.versioning.VersionRange;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
@@ -33,6 +34,7 @@ import org.kohsuke.maven.gpg.loaders.KeyFileLoader;
 import java.io.File;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -98,6 +100,9 @@ public class PgpMojo extends AbstractMojo
     public void execute() throws MojoExecutionException {
         if (skip)   return;
 
+        // capture the attached artifacts to sign before we start attaching our own stuff
+        List<Artifact> attached = new ArrayList<Artifact>((List<Artifact>)project.getAttachedArtifacts());
+
         Signer signer = new Signer(loadSecretKey(),loadPassPhrase().toCharArray());
 
         if ( !"pom".equals( project.getPackaging() ) )
@@ -115,14 +120,15 @@ public class PgpMojo extends AbstractMojo
             getLog().debug( "Generating signature for " + pomToSign );
 
             // fake just enough Artifact for the sign method
-            DefaultArtifact a = new DefaultArtifact(project.getGroupId(), project.getArtifactId(), null, null, null, null,
+            DefaultArtifact a = new DefaultArtifact(project.getGroupId(), project.getArtifactId(),
+                    VersionRange.createFromVersion(project.getVersion()), null, "pom", null,
                     new DefaultArtifactHandler("pom"));
             a.setFile(pomToSign);
 
             sign(signer,a);
         }
 
-        for (Artifact a : (List<Artifact>)project.getAttachedArtifacts())
+        for (Artifact a : attached)
             sign(signer,a);
     }
 
@@ -141,7 +147,7 @@ public class PgpMojo extends AbstractMojo
 
         String scheme = secretkey.substring(0, head);
         try {
-            KeyFileLoader kfl = (KeyFileLoader)container.lookup(SecretKeyLoader.class.getName(), scheme);
+            SecretKeyLoader kfl = (SecretKeyLoader)container.lookup(SecretKeyLoader.class.getName(), scheme);
             return  kfl.load(this, secretkey.substring(head+1));
         } catch (ComponentLookupException e) {
             throw new MojoExecutionException("Invalid secret key scheme '"+scheme+"'. If this is your custom scheme, perhaps you forgot to specify it in <dependency> to this plugin?",e);
