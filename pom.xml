@@ -92,6 +92,7 @@
           <pomIncludes>
             <pomInclude>*/pom.xml</pomInclude>
           </pomIncludes>
+          <mavenOpts>-e</mavenOpts>
           <goals>
             <goal>clean</goal>
             <goal>install</goal>

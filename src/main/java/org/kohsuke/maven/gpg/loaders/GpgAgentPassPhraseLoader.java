@@ -41,9 +41,7 @@ public class GpgAgentPassPhraseLoader extends PassphraseLoader {
         if (tokens.length!=3 || !tokens[2].equals("1"))
             throw new MojoExecutionException("Invalid  GPG_AGENT_INFO: "+agentInfo);
 
-        connect(tokens[0]);
-
-        return null;
+        return getPassphrase(tokens[0]);
     }
 
     /**
@@ -115,7 +113,7 @@ public class GpgAgentPassPhraseLoader extends PassphraseLoader {
 //            }
 
             s.getOutputStream().write(
-                    "GET_PASSPHRASE pgp-maven-plugin:passphrase1 + Passphrase Enter%20Passphrase%20To%20Sign%20Maven%20Artifact\n".getBytes()
+                    "GET_PASSPHRASE pgp-maven-plugin:passphrase + Passphrase Enter%20Passphrase%20To%20Sign%20Maven%20Artifact\n".getBytes()
             );
             s.getOutputStream().flush();
             return new String(Hex.decode(expectOK(in).trim()));
