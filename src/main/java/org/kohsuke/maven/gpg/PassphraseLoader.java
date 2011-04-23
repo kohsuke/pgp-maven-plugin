@@ -8,5 +8,5 @@ import java.io.IOException;
  * @author Kohsuke Kawaguchi
  */
 public abstract class PassphraseLoader {
-    public abstract String getPassphrase(PgpMojo mojo) throws IOException, MojoExecutionException;
+    public abstract String load(PgpMojo mojo, String specifier) throws IOException, MojoExecutionException;
 }

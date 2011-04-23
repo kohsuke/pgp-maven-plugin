@@ -144,6 +144,30 @@ public class PgpMojo extends AbstractMojo
     }
 
     /**
+     * From {@link #passphrase}, load the passphrase.
+     */
+    public String loadPassPhrase() throws MojoExecutionException {
+        if (passphrase==null)
+            passphrase = System.getenv("PGP_PASSPHRASE");
+        if (passphrase==null)
+            throw new MojoExecutionException("No PGP passphrase is configured. Either do so in POM, or via -Dpgp.passphrase, or the PGP_PASSPHRASE environment variable");
+
+        int head = passphrase.indexOf(':');
+        if (head<0)
+            throw new MojoExecutionException("Invalid passphrase string. It needs to start with a scheme like 'FOO:': "+passphrase);
+
+        String scheme = passphrase.substring(0, head);
+        try {
+            PassphraseLoader pfl = (PassphraseLoader)container.lookup(PassphraseLoader.class.getName(), scheme);
+            return  pfl.load(this, passphrase.substring(head+1));
+        } catch (ComponentLookupException e) {
+            throw new MojoExecutionException("Invalid pass phrase scheme '"+scheme+"'. If this is your custom scheme, perhaps you forgot to specify it in <dependency> to this plugin?",e);
+         } catch (IOException e) {
+            throw new MojoExecutionException("Failed to load passphrase from "+passphrase,e);
+        }
+    }
+
+    /**
      * Sign and attach the signaature to the build.
      */
     private void sign(Artifact a) {
