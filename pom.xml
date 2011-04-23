@@ -41,6 +41,17 @@
       <artifactId>plexus-component-annotations</artifactId>
       <version>1.5.5</version>
     </dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>1.4</version>
+    </dependency>
+    <dependency>
+      <groupId>net.java.dev.jna</groupId>
+      <artifactId>jna</artifactId>
+      <version>3.2.4</version>
+    </dependency>
+
   </dependencies>
 
   <build>

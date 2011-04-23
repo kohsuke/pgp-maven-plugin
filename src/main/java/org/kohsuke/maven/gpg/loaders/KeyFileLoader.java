@@ -1,10 +1,12 @@
-package org.kohsuke.maven.gpg;
+package org.kohsuke.maven.gpg.loaders;
 
 import org.bouncycastle.openpgp.PGPObjectFactory;
 import org.bouncycastle.openpgp.PGPSecretKey;
 import org.bouncycastle.openpgp.PGPSecretKeyRing;
 import org.bouncycastle.openpgp.PGPUtil;
 import org.codehaus.plexus.component.annotations.Component;
+import org.kohsuke.maven.gpg.PgpMojo;
+import org.kohsuke.maven.gpg.SecretKeyLoader;
 
 import java.io.File;
 import java.io.FileInputStream;

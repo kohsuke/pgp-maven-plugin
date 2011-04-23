@@ -1,7 +1,9 @@
-package org.kohsuke.maven.gpg;
+package org.kohsuke.maven.gpg.loaders;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.codehaus.plexus.component.annotations.Component;
+import org.kohsuke.maven.gpg.PassphraseLoader;
+import org.kohsuke.maven.gpg.PgpMojo;
 
 import java.io.IOException;
 

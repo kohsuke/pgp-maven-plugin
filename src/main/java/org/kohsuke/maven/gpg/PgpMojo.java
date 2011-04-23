@@ -28,6 +28,7 @@ import org.bouncycastle.openpgp.PGPSecretKey;
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
 import org.codehaus.plexus.util.FileUtils;
+import org.kohsuke.maven.gpg.loaders.KeyFileLoader;
 
 import java.io.File;
 import java.io.IOException;
