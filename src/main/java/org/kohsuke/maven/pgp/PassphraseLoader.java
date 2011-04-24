@@ -1,11 +1,9 @@
-package org.kohsuke.maven.gpg;
+package org.kohsuke.maven.pgp;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.bouncycastle.openpgp.PGPSecretKey;
 
-import java.io.Closeable;
 import java.io.IOException;
-import java.util.Iterator;
 
 /**
  * Loads a pass-phrase for the specified key.

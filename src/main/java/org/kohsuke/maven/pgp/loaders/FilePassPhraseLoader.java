@@ -1,16 +1,14 @@
-package org.kohsuke.maven.gpg.loaders;
+package org.kohsuke.maven.pgp.loaders;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.bouncycastle.openpgp.PGPSecretKey;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.util.FileUtils;
-import org.kohsuke.maven.gpg.PassphraseLoader;
-import org.kohsuke.maven.gpg.PgpMojo;
+import org.kohsuke.maven.pgp.PassphraseLoader;
+import org.kohsuke.maven.pgp.PgpMojo;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.Iterator;
 
 /**
  * Loads a pass phrase from a file.

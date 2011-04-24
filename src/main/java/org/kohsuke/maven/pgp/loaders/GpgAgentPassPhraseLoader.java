@@ -1,4 +1,4 @@
-package org.kohsuke.maven.gpg.loaders;
+package org.kohsuke.maven.pgp.loaders;
 
 import com.sun.jna.Library;
 import com.sun.jna.Native;
@@ -9,8 +9,8 @@ import org.bouncycastle.openpgp.PGPException;
 import org.bouncycastle.openpgp.PGPSecretKey;
 import org.bouncycastle.util.encoders.Hex;
 import org.codehaus.plexus.component.annotations.Component;
-import org.kohsuke.maven.gpg.PassphraseLoader;
-import org.kohsuke.maven.gpg.PgpMojo;
+import org.kohsuke.maven.pgp.PassphraseLoader;
+import org.kohsuke.maven.pgp.PgpMojo;
 
 import java.io.BufferedReader;
 import java.io.FileDescriptor;

@@ -1,4 +1,4 @@
-package org.kohsuke.maven.gpg;
+package org.kohsuke.maven.pgp;
 
 import org.bouncycastle.bcpg.ArmoredOutputStream;
 import org.bouncycastle.bcpg.BCPGOutputStream;

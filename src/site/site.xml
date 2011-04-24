@@ -21,9 +21,10 @@
     </menu>
 
     <menu name="References">
-      <item name="Javadoc" href="apidocs/index.html"/>
       <item name="Specifying secret key" href="secretkey.html"/>
       <item name="Specifying pass-phrase" href="passphrase.html"/>
+      <item name="Goals" href="plugin-info.html"/>
+      <item name="Javadoc" href="apidocs/index.html"/>
     </menu>
 
     <menu ref="reports"/>

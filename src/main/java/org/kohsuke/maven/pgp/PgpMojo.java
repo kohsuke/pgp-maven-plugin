@@ -1,4 +1,4 @@
-package org.kohsuke.maven.gpg;
+package org.kohsuke.maven.pgp;
 
 /*
  * Copyright 2001-2005 The Apache Software Foundation.

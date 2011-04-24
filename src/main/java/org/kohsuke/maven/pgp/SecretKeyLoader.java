@@ -1,4 +1,4 @@
-package org.kohsuke.maven.gpg;
+package org.kohsuke.maven.pgp;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.bouncycastle.openpgp.PGPSecretKey;
