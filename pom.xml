@@ -167,12 +167,14 @@
     <license>
       <name>MIT License</name>
       <distribution>repository</distribution>
-      <url>http://www.opensource.org/licenses/mit-license.php</url>
+      <url>http://kohsuke.org/pgp-maven-plugin/LICENSE.txt</url>
     </license>
   </licenses>
 
   <scm>
     <connection>scm:git:git@github.com:kohsuke/pgp-maven-plugin.git</connection>
+    <developerConnection>scm:git:git@github.com:kohsuke/pgp-maven-plugin.git</developerConnection>
+    <url>https://github.com/kohsuke/pgp-maven-plugin</url>
   </scm>
 
   <distributionManagement>
