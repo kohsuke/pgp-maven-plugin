@@ -1,0 +1,30 @@
+  ---
+  PGP Maven Plugin
+  ---
+
+  This plugin simplifies the PGP signing of the Maven artifacts.
+Compared to the Maven GPG plugin, this plugin is more flexible in how it retrieves the key, which makes
+this plugin work better in
+a non-interactive build environment, such as in {{{http://jenkins-ci.org/}Jenkins}}, and
+in environments that don't have GPG agent setup.
+
+
+
+The idea behind this plugin
+
+  Conceptually speaking, signing binaries is an easy process. It takes a PGP private key, and its pass-phrase,
+then some cryptographic computation happens and in the end you get signatures.
+PGP implementation, such as GPG, provides some tooling support around this, but unfortunately it's primary use case
+is for individuals to have his/her own key and use that in multiple applications to produce signatures, such as in e-mails.
+
+  This makes it unnecessarily difficult to use GPG in a "headless" environment, where bits need to be signed
+without any human intervention. The problem gets worse when you are talking about a build server, which needs
+to sign different builds by different keys, and such activity can happen in any one of the build machines in a build farm.
+
+  Aside from this, in my opinion Maven GPG plugin fails to model the problem properly. Really the only
+two "parameters" that need configuration is (1) the private key and (2) the pass-phrase to access the private key,
+but it doesn't expose these two configurations directly; instead, you have a number of options that indirectly
+control them, and they often miss the point --- for example, you can only specify the pass-phrase via GPG agent
+(which requires interactive X display), via the <<<settings.xml>>> (which requires someone manually modifying it prior
+to signing), or via the -D option (which exposes the passphrase and is totally insecure.)
+

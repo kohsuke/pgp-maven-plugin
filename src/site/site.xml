@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="PGP Maven plugin">
+  <bannerLeft>
+    <name>PGP Maven plugin</name>
+    <href>http://kohsuke.org/pgp-maven-plugin</href>
+  </bannerLeft>
+  <skin>
+    <groupId>org.kohsuke</groupId>
+    <artifactId>maven-skin</artifactId>
+    <version>1.1</version>
+  </skin>
+  <!--<bannerRight>-->
+    <!--<src>http://maven.apache.org/images/maven-small.gif</src>-->
+  <!--</bannerRight>-->
+  <body>
+    <menu name="PGP Maven Plugin">
+      <item name="Introduction" href="index.html"/>
+      <item name="Usage" href="usage.html" />
+
+      <item name="Download" href="http://repo1.maven.org/maven2/org/kohsuke/pgp-maven-plugin/"/>
+    </menu>
+
+    <menu name="References">
+      <item name="Javadoc" href="apidocs/index.html"/>
+      <item name="Specifying secret key" href="secretkey.html"/>
+      <item name="Specifying pass-phrase" href="passphrase.html"/>
+    </menu>
+
+    <menu ref="reports"/>
+  </body>
+</project>

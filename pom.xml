@@ -3,12 +3,13 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.kohsuke</groupId>
-  <artifactId>gpg-maven-plugin</artifactId>
+  <artifactId>pgp-maven-plugin</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
 
-  <name>gpg-maven-plugin Maven Plugin</name>
-  <url>http://maven.apache.org</url>
+  <name>PGP Maven plugin</name>
+  <url>http://kohsuke.org/pgp-maven-plugin</url>
+  <description>PGP signing for Maven artifacts, done right.</description>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -92,7 +93,7 @@
           <pomIncludes>
             <pomInclude>*/pom.xml</pomInclude>
           </pomIncludes>
-          <mavenOpts>-e</mavenOpts>
+          <showErrors>true</showErrors>
           <goals>
             <goal>clean</goal>
             <goal>install</goal>

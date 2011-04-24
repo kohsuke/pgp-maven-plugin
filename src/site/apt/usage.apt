@@ -1,0 +1,91 @@
+  ---
+  Usage
+  ---
+
+  Add the following plugin definition in your POM to add this plugin. This causes the plugin
+to execute during the <<<verify>>> phase to all the artifacts (just like the Maven GPG plugin.)
+
+---
+  <plugin>
+    <groupId>org.kohsuke</groupId>
+    <artifactId>pgp-maven-plugin</artifactId>
+    <executions>
+      <execution>
+        <goals>
+          <goal>sign</goal>
+        </goals>
+      </execution>
+    </executions>
+  </plugin>
+---
+
+Specifying the private key and the pass-phrase
+
+  Signing binaries in PGP requires two parameters. One is the private key, and the other is pass-phrase that
+unlocks/decrypts the private key.
+
+  This plugin lets you configure these two parameters separately through URI-like strings. The format of this
+  string is <<<SCHEME:DATA>>>, where the interpretation of <<<DATA>>> is up to the scheme (This is somewhat
+  like how you specify SCM in POM.) For example, <<<literal:abcdef>>> means you are specifying the passphrase "abcdef",
+  while <<<file:path/to/file>>> means reading pass-phrase from the specified file.
+
+  There are a number of ways you can specify these two strings. In the order of preference, those are:
+
+  [[1]] Plugin configuration of POM
+
+  [[1]] The -D option in Maven invocation
+
+  [[1]] Environment variables
+
+  []
+
+  ... and you can also mix and match.
+
+* Plugin configuration of POM
+
+  The <<secretkey>> and <<passpharse>> configuration parameter can be specified to POM,
+  like this:
+
+---
+  <plugin>
+    <groupId>org.kohsuke</groupId>
+    <artifactId>pgp-maven-plugin</artifactId>
+    <configuration>
+      <secretkey>keyfile:${project.basedir}/test.key.asc</secretkey>
+      <passphrase>literal:test</passphrase>
+    </configuration>
+  </plugin>
+---
+
+  This is useful for example when your key and pass-phrase is a part of your source tree.
+
+
+* The -D option in Maven invocation
+
+  The <<<-Dpgp.secretkey=...>>> and <<<-Dpgp.passphrase=...>>> can be used to specify those two strings.
+
+---
+$ mvn -Dpgp.secretkey=keyring:id=F0D853AA \
+      -Dpgp.passphrase=file:path/to/passphrase.txt install
+---
+
+  This is more useful when you are invoking Maven in a build server, where your key and passphrase
+  lives outside the workspace. This also avoids hard-coding any signing parameters into POM,
+  which makes more sense for projects where each developer has different keys and passphrases.
+
+  A variation of this is to specify them in your <<settings.xml>>, which allows you to reuse
+  the same setting over multiple projects.
+
+* Environment variables
+
+  The <<<PGP_SECRETKEY>>> and <<<PGP_PASSPHRASE>>> can be used to configure these parameters.
+
+---
+$ export PGP_SECRETKEY=keyfile:path/to/my.asc
+$ export PGP_PASSPHRASE=gpg-agent:
+$ mvn
+---
+
+  This is useful when your Maven plugin execution is a part of a bigger build script, since environment
+  variables inherit from parent processes to child processes automatically, and you don't have to
+  pass them around from scripts to scripts.

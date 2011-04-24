@@ -18,7 +18,7 @@ import java.util.Iterator;
 @Component(role=PassphraseLoader.class,hint="literal")
 public class LiteralPassPhraseLoader extends PassphraseLoader {
     @Override
-    public Iterator<String> load(PgpMojo mojo, PGPSecretKey secretKey, String specifier) throws IOException, MojoExecutionException {
-        return Collections.singleton(specifier).iterator();
+    public String load(PgpMojo mojo, PGPSecretKey secretKey, String specifier) throws IOException, MojoExecutionException {
+        return specifier;
     }
 }

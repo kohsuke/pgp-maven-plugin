@@ -21,7 +21,7 @@ import java.util.Iterator;
 public class FilePassPhraseLoader extends PassphraseLoader {
     @Override
     public String load(PgpMojo mojo, PGPSecretKey secretKey, String specifier) throws IOException, MojoExecutionException {
-        File f = new File(specifier);
+        File f = new File(specifier.replace('|',':'));
         if (!f.exists())
             throw new MojoExecutionException("No such file exists: "+specifier);
         return FileUtils.fileRead(f).trim();

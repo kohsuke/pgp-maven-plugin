@@ -1,0 +1,43 @@
+  ---
+  Specifying pass-phrase
+  ---
+
+  This plugin comes with several different implementations of how you specify the pass-phrase
+
+Specify the passphrase as a literal
+
+---
+literal:PASSPHRASE
+---
+
+  This lets you specify the passphrase inline directly. This is insecure, but if your private key
+is sufficiently protected, one might justifiably do this.
+
+
+Store passphrase in a file
+
+  If you store the pass-phrase in a text file, you can do the following to have this plugin read that file.
+With proper file access permission, this is a reasonable secure approach, and you won't leak the passphrase
+into build log files.
+
+---
+file:path/to/textfile
+---
+
+Obtain passphrase from GPG Agent
+
+  If you are running Maven interactively, specify the following to retrieve the passphrase from GPG agent.
+Refer to gpg-agent man page for how to run the GPG agent.
+
+---
+gpg-agent:
+---
+
+  The GPG agent support is platform dependent. If this didn't work for your platform, please file a ticket.
+
+
+Implementing your own passphrase loader
+
+  Aside from the above built-in implementations, you can implement a custom loader as a Plexus component,
+  then specify it as a dependency into the plugin declaration of POM. Refer to the source code of this plugin
+  to see what base class you extend from, and how to mark your class as a component.
