@@ -181,7 +181,7 @@ public class PgpMojo extends AbstractMojo
     }
 
     /**
-     * Sign and attach the signaature to the build.
+     * Sign and attach the signature to the build.
      */
     protected void sign(Signer signer, Artifact a) throws MojoExecutionException {
         String name = a.getGroupId() + "-" + a.getArtifactId();
