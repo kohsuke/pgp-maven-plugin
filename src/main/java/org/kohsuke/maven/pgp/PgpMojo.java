@@ -184,11 +184,8 @@ public class PgpMojo extends AbstractMojo
      * Sign and attach the signature to the build.
      */
     protected void sign(Signer signer, Artifact a) throws MojoExecutionException {
-        String name = a.getGroupId() + "-" + a.getArtifactId();
-        if (a.getClassifier()!=null)
-            name += '-'+a.getClassifier();
-        name += '.'+a.getArtifactHandler().getExtension();
-        name += ".asc";
+        File file = a.getFile();
+        String name = file.getName() + ".asc";
 
         File signature = new File(outputDirectory,name);
 
