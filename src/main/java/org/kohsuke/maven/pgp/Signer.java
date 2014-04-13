@@ -38,6 +38,10 @@ class Signer {
     Signer(PGPSecretKey secretKey, char[] passphrase) {
         try {
             this.privateKey = secretKey.extractPrivateKey(passphrase,PROVIDER);
+            if (this.privateKey == null)
+                throw new IllegalArgumentException("Unsupported signing key"
+                    + (secretKey.getKeyEncryptionAlgorithm() == PGPPublicKey.RSA_SIGN ?
+                       ": RSA (sign-only) is unsupported by BouncyCastle" : ""));
             this.publicKey = secretKey.getPublicKey();
         } catch (PGPException e) {
             throw new IllegalArgumentException("Passphrase is incorrect",e);
