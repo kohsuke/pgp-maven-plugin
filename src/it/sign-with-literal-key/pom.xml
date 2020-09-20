@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>test</groupId>
+  <artifactId>test</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <packaging>jar</packaging>
+
+  <properties>
+    <maven.test.skip>true</maven.test.skip>
+  </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>@project.groupId@</groupId>
+        <artifactId>@project.artifactId@</artifactId>
+        <version>@project.version@</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>sign</goal>
+            </goals>
+            <configuration>
+              <secretkey>
+                literal:lQO+BE2zBfMBCAC1TzxsldbJAgeo/0ekwvoxwod6dtt3Ack6Le6zRC7E15ttspHI
+				tssRSFHwncFh1+QeKrLwoiRTJiTK8Zh7NcdQVIXPzRxyZLoFt8hHADSdMi8v2SwK
+                cFNM2bBLc1oIxX8O4BDbcIumjlxu0+9TPfn/LSXpwlyPZqyHHGZIVotqBbXClUiL
+                TL2diEDYuzNlZYWB4eyja6M0PjQQYAqHGu5gnfH6wi+B5e3CNPiXpZt/QIl1bB6G
+                Pl+hnykbIL7wueos2ey8cTNopPkEykyHj00TLGlMEyjaMFpFuhlgy40tv3drp0iR
+                K7vasl5/tsAwIEHi/BRtS1aDVMzxWBx05f5LABEBAAH+AwMCBSURGz0lq6lgKQVQ
+                L41wCweSuGXRnzd+JpYdBcZoj+otd/Zi0h83k8MKJxH41KCa8Mgp4FhBYay9HVi+
+                Ep/68ZN3M/UoBIBUjFRM3pLRCmn7t/JLJWpo8fBqUT++W+wb7/xGUWIuo8IVCdBR
+                97Lg+W1b2JGtx73oUr2H/dAT9kjNSHGrKHxDGyHpH3IwyeYS9WCyt1FlWUbBU7Un
+                Rl8gtt6Ea111se2xtOvBi0xPCBEJUb71ZHeTfF4KGG9K3wHXCvx+JwoynmjL9uMS
+                QDO0gjySoQ97jsEuKljVwxUvRb16MlDR+hDptFON9uZiudNOptrlG9/wmCPK6Oiw
+                3tVJmyVY0ULMXT0YtBWWbnvo5O+nl7LNY3O1ACTBIOsy9XktOBh2wS/ag0jsh0b3
+                g1lPxhZ4Tc+tWZugKsSBPPl9vH9zSk0/HVvBNZZ2wXcI13uazV0BuOunAYN8Kw7x
+                0JnoBG7Rfc/ym2N5uBnT6DYIPBvM4k+GCTBuXMToVuWpIEvYa+swaC8AANgDSgDo
+                NYPVsRUEDbegO0FQ15XqscvxURzUOczLPTnhKWzSSZpSEq9oMiHofBPRRtrhYNgt
+                NIbeduNUTpDVcBvIAGK95ZVu86rgPCGC+dYIeSA8LlP+yPjSdk02AApnztspkdvN
+                S3hd0/zF3o8gok0Yf1nZdT80BzfbzHdUPu9st9aZHQ68sSGIhqClPx9iuitO2rvh
+                rOiodKLXxgJfGgTx9k3izImwaz8Sobog3PhP60TBRmrajjAAKimUVoNHIcl+NIvJ
+                WR6XboeVd0yD3MI412ghK2kJ6qX7NWRimlbdDUkuy/aTnOL0kNH9WGKdOvu0eEkP
+                SZjW4YsbQ7Eu5T+H/7tQPkBCQTI7zcTvCzhPD3ToaViXWlYJqfzDYGZL9PowZlr/
+                ebQ3VGVzdCBLZXkgKFRoaXMgaXMgYSBib2d1cyB0ZXN0IGtleSkgPGJvZ3VzQGtv
+                aHN1a2Uub3JnPokBOAQTAQIAIgUCTbMF8wIbAwYLCQgHAwIGFQgCCQoLBBYCAwEC
+                HgECF4AACgkQ/AEXtLTovT+gHAf/eX3GO/cYYYDSsKwF+K50t1FHrUm5rIKtCps7
+                dOuPlnFADK6ALdIujBMb+Rc1akwx6A95BBGY1L8xAuMFWxmeOxkwrGnS+kPnXE+4
+                WV40rjvzPewSE+iqDRz+at7Gw7EPoqLmrkAND8pRFGMb36uU25mx9l41fih3CTan
+                uCdhc0/XGyqczmhTCsnOhjSaOe6sBbn+jmsw42tY5gDkGJwEvUbUh6fX3NCT7Ja2
+                3flakHPR0n1jWYQBOJ6Tty0gcWogw5FHwuRcm8/Z+5AUx3JrQSw9QfY1uOLmH9eS
+                FlNnDmXvQDwjNkjnKoL0ndEKRWI5BvmXOlNjBltRYYtqvKruy50DvgRNswXzAQgA
+                yG6KsryOznsEysLS0y3ZGFqVTG1nRBFlfvjzYAPc2+fzlLnWPhZ4xmsHJptCwjX3
+                lbBimYL9IY4PqMFBrUjTcwzox8llLPFG/Vad+Bt/FbwC9QPSEFTc2AFZ2MdGwQU9
+                d1hhp/FLzqw8fYf5lb6MF4jfATbPJdxyoggWl8Xdmo5hKD13AwYAYckDgieo4Ov5
+                1aGHLqPNiGkjX47ErvnoXVr1ROlwv5kgJ/1qpJ7lh1cqgZlYylUPgsoWPV1X4Rug
+                YTKicMPEfmcKBkVWPbpUCMmWnjDed5hU0NWix3QffxRNPLxa/t/2e1JVAObU/adb
+                9JIXBE6E4luXtZc44Tt9WQARAQAB/gMDAgUlERs9JaupYFniJnyBJmO1kcgg5o9z
+                Z7nXb4RrygfIsgtwOOfnMEaCskYAOULDv5Z1uE4ARzI/t31DZpXFbBTInN1sbvxB
+                9MW+FjXu1kzf2illkfSJtQrDIBetiuxr3udlGyd2JfWq0j+HeanqgcyzkuiPIkuq
+                I22jPgTpl/KwWGaywExq70jgKOLmFAXJLpvm4dYpeumMpynGtzp9fqMpQ5QAXz9j
+                LjdugxS/EkBL6o4PVH2jgNZ4x1K9kG7v8yhAiVnErucICq/SxciBXVeJyqSy0jc4
+                5tWj2KT4N78rvg2suXZSZltqf8aBNWyTFgaVDOE5m7AqedIWgnPpn/Fd8M/ZKgxF
+                FscWsOUjacB1B03dxzLCqEekK2F3bF6s+YePofkCgY4tuhnrTeDK56BB2QXm4ovy
+                SW7/iaPjkXVl0LtvIT4gwgS0ojWMEv+7cIWJYhHazdqPWtpWGit+ecF5WxY9bCFl
+                qRgrNrLy/xf+5hTVbHevMPhsCJPDcVFfO29KZTTAhcFqpEvoO+HNy3oJ0/9aM3/e
+                xAbpspljvvrXI4zMusNLKF5+Kt5gVjIY1ayqoUdb9zGHEGTA+iPISRXtvU+Q36co
+                0PdKKhIlBV8kBoRxQZAaMkAphxUvF0IfJZZqAfD3XFta8mZL0GZAfYp1Mq5RM6nO
+                8Ct1JybBfCQtLhaoMFZBOWlYd2F3jUoKiwfJP2KuPvYfVcqaD1y3oe26QcpSWuzM
+                F8hhr9sOL3Cp+TFotjVYKSHBveBMNXWVxXL4GfLrrux7rPBuVXsqxxXN9Vzj7dkw
+                PdJTImIBzw2Y28sKiCJt/gEJea9lzy7f9ED4ufzfasCkaDHhCZ7vb6JwhawlgRJK
+                wb+TtHYrLRjRHCXOB6HK0xVFkYRRqMkTfsCOzBcR0SbFGo4I2PaJAR8EGAECAAkF
+                Ak2zBfMCGwwACgkQ/AEXtLTovT9Acgf+NZmCFoIStZ0m8r/MmM1Qj/aeAHKZmDFe
+                6WWHxeZUrrGgICCQRvCltCRuB4oDhVG3q57EzoJAITlqp9wiMAxvcygiheDm4c9I
+                TiUsY1ZYsZCdhjffcY0L2FrH9ySDqfQmiECin7m0w3rTm90Q3vJCE1Ihx+C9kipR
+                PH9ryn7GfqiPhROQ9eS/gLoTebde08dOm4UqUst/4AWm+kpHgGLgeKycrTvpGc/6
+                /B49E0dRz/qvr9Xvg8xpcx6ro1K0GlvugALFODg5MiQ3WIZsJCynfZeVcV12HH56
+                De/5cjJiww8yLzGzDy6KvuBFh8vGoeIBlbMpwz1cxuaUzRnJAf6+BA==
+                =JL8u
+              </secretkey>
+              <passphrase>literal:test</passphrase>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
