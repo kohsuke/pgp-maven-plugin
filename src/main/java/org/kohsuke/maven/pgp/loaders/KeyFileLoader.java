@@ -4,6 +4,7 @@ import org.bouncycastle.openpgp.PGPObjectFactory;
 import org.bouncycastle.openpgp.PGPSecretKey;
 import org.bouncycastle.openpgp.PGPSecretKeyRing;
 import org.bouncycastle.openpgp.PGPUtil;
+import org.bouncycastle.openpgp.operator.bc.BcKeyFingerprintCalculator;
 import org.codehaus.plexus.component.annotations.Component;
 import org.kohsuke.maven.pgp.PgpMojo;
 import org.kohsuke.maven.pgp.SecretKeyLoader;
@@ -24,7 +25,7 @@ public class KeyFileLoader extends SecretKeyLoader {
     public PGPSecretKey load(PgpMojo mojo, String keyFile) throws IOException {
         FileInputStream in = new FileInputStream(new File(keyFile));
         try {
-            PGPObjectFactory pgpF = new PGPObjectFactory(PGPUtil.getDecoderStream(in));
+            PGPObjectFactory pgpF = new PGPObjectFactory(PGPUtil.getDecoderStream(in), new BcKeyFingerprintCalculator());
             Object o = pgpF.nextObject();
             if (!(o instanceof PGPSecretKeyRing)) {
                 throw new IOException(keyFile+" doesn't contain PGP private key");

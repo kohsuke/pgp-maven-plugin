@@ -10,6 +10,11 @@ import org.bouncycastle.openpgp.PGPSecretKey;
 import org.bouncycastle.openpgp.PGPSignature;
 import org.bouncycastle.openpgp.PGPSignatureGenerator;
 import org.bouncycastle.openpgp.PGPUtil;
+import org.bouncycastle.openpgp.operator.PBESecretKeyDecryptor;
+import org.bouncycastle.openpgp.operator.PGPDigestCalculatorProvider;
+import org.bouncycastle.openpgp.operator.bc.BcPBESecretKeyDecryptorBuilder;
+import org.bouncycastle.openpgp.operator.bc.BcPGPContentSignerBuilder;
+import org.bouncycastle.openpgp.operator.bc.BcPGPDigestCalculatorProvider;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -37,7 +42,10 @@ class Signer {
 
     Signer(PGPSecretKey secretKey, char[] passphrase) {
         try {
-            this.privateKey = secretKey.extractPrivateKey(passphrase,PROVIDER);
+            PGPDigestCalculatorProvider pgpDigestCalculatorProvider = new BcPGPDigestCalculatorProvider();
+            PBESecretKeyDecryptor decryptor = new BcPBESecretKeyDecryptorBuilder(pgpDigestCalculatorProvider)
+                    .build(passphrase);
+            this.privateKey = secretKey.extractPrivateKey(decryptor);
             if (this.privateKey == null)
                 throw new IllegalArgumentException("Unsupported signing key"
                     + (secretKey.getKeyEncryptionAlgorithm() == PGPPublicKey.RSA_SIGN ?
@@ -49,8 +57,9 @@ class Signer {
     }
 
     PGPSignature sign(InputStream in) throws IOException, PGPException, GeneralSecurityException {
-        PGPSignatureGenerator sGen = new PGPSignatureGenerator(publicKey.getAlgorithm(), PGPUtil.SHA1, PROVIDER);
-        sGen.initSign(PGPSignature.BINARY_DOCUMENT, privateKey);
+        BcPGPContentSignerBuilder signerBuilder = new BcPGPContentSignerBuilder(publicKey.getAlgorithm(), PGPUtil.SHA1);
+        PGPSignatureGenerator sGen = new PGPSignatureGenerator(signerBuilder);
+        sGen.init(PGPSignature.BINARY_DOCUMENT, privateKey);
 
         byte[] buf = new byte[4096];
         int len;

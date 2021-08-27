@@ -4,6 +4,7 @@ import org.bouncycastle.openpgp.PGPObjectFactory;
 import org.bouncycastle.openpgp.PGPSecretKey;
 import org.bouncycastle.openpgp.PGPSecretKeyRing;
 import org.bouncycastle.openpgp.PGPUtil;
+import org.bouncycastle.openpgp.operator.bc.BcKeyFingerprintCalculator;
 import org.codehaus.plexus.component.annotations.Component;
 import org.kohsuke.maven.pgp.PgpMojo;
 import org.kohsuke.maven.pgp.SecretKeyLoader;
@@ -39,7 +40,7 @@ public class KeyRingLoader extends SecretKeyLoader {
 
         InputStream in = PGPUtil.getDecoderStream(new FileInputStream(keyFile));
         try {
-            PGPObjectFactory pgpFact = new PGPObjectFactory(in);
+            PGPObjectFactory pgpFact = new PGPObjectFactory(in, new BcKeyFingerprintCalculator());
 
             Object              obj;
             while ((obj = pgpFact.nextObject()) != null)

@@ -7,6 +7,10 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.openpgp.PGPException;
 import org.bouncycastle.openpgp.PGPSecretKey;
+import org.bouncycastle.openpgp.operator.PBESecretKeyDecryptor;
+import org.bouncycastle.openpgp.operator.PGPDigestCalculatorProvider;
+import org.bouncycastle.openpgp.operator.bc.BcPBESecretKeyDecryptorBuilder;
+import org.bouncycastle.openpgp.operator.bc.BcPGPDigestCalculatorProvider;
 import org.bouncycastle.util.encoders.Hex;
 import org.codehaus.plexus.component.annotations.Component;
 import org.kohsuke.maven.pgp.PassphraseLoader;
@@ -120,7 +124,10 @@ public class GpgAgentPassPhraseLoader extends PassphraseLoader {
 
                 String phrase = new String(Hex.decode(expectOK(in).trim()));
                 try {
-                    secretKey.extractPrivateKey(phrase.toCharArray(),new BouncyCastleProvider());
+                    PGPDigestCalculatorProvider pgpDigestCalculatorProvider = new BcPGPDigestCalculatorProvider();
+                    PBESecretKeyDecryptor decryptor = new BcPBESecretKeyDecryptorBuilder(pgpDigestCalculatorProvider)
+                            .build(phrase.toCharArray());
+                    secretKey.extractPrivateKey(decryptor);
                     return phrase;
                 } catch (PGPException e) {
                     // invalid pass phrase
